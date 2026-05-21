@@ -7,6 +7,7 @@ from __future__ import annotations
 import io
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -385,12 +386,27 @@ st.title("Moodle Detective — Panel de Control")
 st.caption("Detección forense de comportamientos sospechosos en cursos Moodle")
 
 uploaded = st.file_uploader(
-    "Sube el log de Moodle (CSV, hasta 200 MB)",
+    "Sube el log de tu propio Moodle (CSV, hasta 200 MB)",
     type=["csv"],
     help="Moodle → Administración del curso → Informes → Registros → Descargar en formato CSV",
 )
 
-if uploaded is None:
+# ─────────────────────────────────────────────────────────────────────────────
+# Procesamiento
+# ─────────────────────────────────────────────────────────────────────────────
+_ejemplo = Path(__file__).parent / "logs_ejemplo.csv"
+
+if uploaded is not None:
+    raw_bytes = uploaded.read()
+    using_example = False
+elif _ejemplo.exists():
+    raw_bytes = _ejemplo.read_bytes()
+    using_example = True
+    st.info(
+        "Mostrando datos del fichero de ejemplo incluido con la aplicación. "
+        "Sube tu propio log para analizarlo."
+    )
+else:
     st.info(
         "Sube un fichero CSV de logs de Moodle para iniciar el análisis.\n\n"
         "**¿Cómo exportarlo?**  \n"
@@ -398,11 +414,6 @@ if uploaded is None:
         "botón *Obtener estos registros* → *Descargar en formato CSV*"
     )
     st.stop()
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Procesamiento
-# ─────────────────────────────────────────────────────────────────────────────
-raw_bytes = uploaded.read()
 
 progress_bar = st.progress(0, text="Cargando CSV…")
 with st.spinner(""):

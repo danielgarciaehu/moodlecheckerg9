@@ -19,7 +19,7 @@ build/
 Thumbs.db
 
 # Data (no subir logs con datos de alumnos al repo)
-*.csv
 *.xlsx
 *.xls
-logs_*/
+*.csv
+!logs_ejemplo.csv
