@@ -475,11 +475,6 @@ with tab1:
     # ── Mapa de calor principal ───────────────────────────────────────────────
     with col_left:
         st.subheader("Mapa de calor: tiempo relativo (usuario × actividad)")
-        st.caption(
-            "Rojo intenso = sospechosamente rápido  ·  "
-            "Amarillo = algo rápido  ·  "
-            "Verde = tiempo normal o más"
-        )
 
         # Calcular ratio = tiempo_usuario / media_recortada por actividad
         act_tm = {
@@ -520,8 +515,16 @@ with tab1:
         fig_heat.update_layout(
             height=max(280, n_students * 17),
             xaxis_tickangle=-40,
-            margin=dict(l=160, r=20, t=10, b=130),
-            coloraxis_colorbar=dict(title="Ratio", len=0.6),
+            margin=dict(l=160, r=20, t=10, b=80),
+            coloraxis_colorbar=dict(
+                orientation="h",
+                x=0.5, xanchor="center",
+                y=-0.12, yanchor="top",
+                thickness=14, len=0.7,
+                title=dict(text="Ratio respecto a la media del grupo", side="top"),
+                tickvals=[0, 0.4, 1, 2, 3],
+                ticktext=["0 — muy rapido", "0.4 — umbral", "1 — media", "2", "3 — lento"],
+            ),
         )
         st.plotly_chart(fig_heat, use_container_width=True)
 
@@ -620,10 +623,7 @@ with tab2:
     tab2a, tab2b = st.tabs(["Actividades por día", "Minutos por día"])
 
     with tab2a:
-        st.caption(
-            "Cada celda = número de actividades distintas completadas ese día. "
-            f"Rojo intenso → ≥ {rush_threshold} actividades/día (posible sprint)."
-        )
+        st.caption("Cada celda = actividades distintas completadas ese día.")
         fig_tl1 = px.imshow(
             matrix_acts,
             x=x_labels_tl, y=y_labels_tl,
@@ -641,17 +641,24 @@ with tab2:
         fig_tl1.update_layout(
             height=max(300, len(user_ord_tl) * 18),
             xaxis_tickangle=-45,
-            margin=dict(l=160, r=20, t=10, b=120),
+            margin=dict(l=160, r=20, t=10, b=80),
+            coloraxis_colorbar=dict(
+                orientation="h",
+                x=0.5, xanchor="center",
+                y=-0.12, yanchor="top",
+                thickness=14, len=0.7,
+                title=dict(text="Actividades por día (rojo = sprint)", side="top"),
+                tickvals=[0, round(rush_threshold * 0.4), round(rush_threshold * 0.7), rush_threshold],
+                ticktext=["0 — sin actividad", f"{round(rush_threshold*0.4)} — ritmo normal",
+                          f"{round(rush_threshold*0.7)}", f"{rush_threshold} — sprint"],
+            ),
         )
         st.plotly_chart(fig_tl1, use_container_width=True)
 
     with tab2b:
         valid_mins = matrix_mins[matrix_mins > 0]
         avg_day    = float(valid_mins.mean()) if valid_mins.size else 30
-        st.caption(
-            "Cada celda = minutos totales dedicados al curso ese día. "
-            "Verde = tiempo normal, gris/blanco = inactividad."
-        )
+        st.caption("Cada celda = minutos totales dedicados al curso ese día.")
         fig_tl2 = px.imshow(
             matrix_mins,
             x=x_labels_tl, y=y_labels_tl,
@@ -669,7 +676,16 @@ with tab2:
         fig_tl2.update_layout(
             height=max(300, len(user_ord_tl) * 18),
             xaxis_tickangle=-45,
-            margin=dict(l=160, r=20, t=10, b=120),
+            margin=dict(l=160, r=20, t=10, b=80),
+            coloraxis_colorbar=dict(
+                orientation="h",
+                x=0.5, xanchor="center",
+                y=-0.12, yanchor="top",
+                thickness=14, len=0.7,
+                title=dict(text="Minutos por día (blanco = inactividad, verde = normal, rojo = muy poco)", side="top"),
+                tickvals=[0, round(avg_day), round(avg_day * 2), round(avg_day * 3)],
+                ticktext=["0", f"{round(avg_day)} min (media)", f"{round(avg_day*2)}", f"{round(avg_day*3)}+"],
+            ),
         )
         st.plotly_chart(fig_tl2, use_container_width=True)
 
@@ -1014,9 +1030,20 @@ with tab5:
                 color_continuous_scale=[[0, "#d32f2f"], [0.3, "#ff9800"], [1, "#2e7d32"]],
                 labels={"Min": "Minutos"},
             )
+            max_min = gantt_df["Min"].max() if not gantt_df.empty else 60
             fig_gantt.update_layout(
                 height=max(320, len(gantt_rows) * 26 + 60),
-                margin=dict(l=20),
+                margin=dict(l=20, b=70),
+                coloraxis_colorbar=dict(
+                    orientation="h",
+                    x=0.5, xanchor="center",
+                    y=-0.18, yanchor="top",
+                    thickness=14, len=0.6,
+                    title=dict(text="Minutos invertidos (rojo = poco, verde = suficiente)", side="top"),
+                    tickvals=[0, round(max_min * 0.3), round(max_min * 0.7), round(max_min)],
+                    ticktext=["0", f"{round(max_min*0.3)} min", f"{round(max_min*0.7)} min",
+                              f"{round(max_min)} min"],
+                ),
             )
             st.plotly_chart(fig_gantt, use_container_width=True)
 
