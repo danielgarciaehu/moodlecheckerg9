@@ -473,22 +473,83 @@ progress_bar = st.progress(0, text="Cargando CSV…")
 with st.spinner(""):
     df_raw = parse_csv(raw_bytes)
     progress_bar.progress(30, text="Filtrando participantes…")
-
-    df = filter_students(df_raw, exclude_list)
-    progress_bar.progress(55, text="Infiriendo orden de actividades…")
-
-    act_order = infer_order(df)
-    progress_bar.progress(70, text="Calculando tiempos por actividad…")
-
-    t_df = activity_times(df)
-    progress_bar.progress(90, text="Calculando puntuaciones de sospecha…")
-
-    sus_df = suspicion_scores(t_df, alpha, threshold)
-    progress_bar.progress(100, text="¡Listo!")
-
+    df_full = filter_students(df_raw, exclude_list)
+    progress_bar.progress(40, text="Preparando filtro de fechas…")
 progress_bar.empty()
 
-if df.empty or t_df.empty:
+if df_full.empty:
+    st.error("No se encontraron eventos de estudiantes en el CSV. Revisa los nombres a excluir.")
+    st.stop()
+
+# ── Selector de periodo ────────────────────────────────────────────────────────
+_PERIODOS = [
+    "Total histórico",
+    "Últimos 12 meses",
+    "Últimos 6 meses",
+    "Último mes",
+    "Última semana",
+    "Rango personalizado",
+]
+
+_dmin_full = df_full["date"].min()
+_dmax_full = df_full["date"].max()
+
+_col_gap, col_periodo = st.columns([3, 1])
+with col_periodo:
+    periodo_sel = st.selectbox(
+        "Periodo",
+        _PERIODOS,
+        index=0,
+        label_visibility="collapsed",
+        key="periodo_sel",
+    )
+    if periodo_sel == "Rango personalizado":
+        _default_from = max(_dmin_full, _dmax_full - timedelta(days=30))
+        _rango = st.date_input(
+            "Rango",
+            value=(_default_from, _dmax_full),
+            min_value=_dmin_full,
+            max_value=_dmax_full,
+            label_visibility="collapsed",
+            key="rango_custom",
+        )
+        if isinstance(_rango, (list, tuple)) and len(_rango) == 2:
+            _f_from, _f_to = pd.Timestamp(_rango[0]), pd.Timestamp(_rango[1]) + timedelta(days=1) - timedelta(seconds=1)
+        else:
+            _f_from, _f_to = _dmin_full, _dmax_full
+    else:
+        _f_to = _dmax_full
+        if periodo_sel == "Últimos 12 meses":
+            _f_from = _dmax_full - timedelta(days=365)
+        elif periodo_sel == "Últimos 6 meses":
+            _f_from = _dmax_full - timedelta(days=182)
+        elif periodo_sel == "Último mes":
+            _f_from = _dmax_full - timedelta(days=30)
+        elif periodo_sel == "Última semana":
+            _f_from = _dmax_full - timedelta(days=7)
+        else:  # Total histórico
+            _f_from = _dmin_full
+
+# Aplicar filtro de fechas
+df = df_full[(df_full["date"] >= _f_from) & (df_full["date"] <= _f_to)].copy()
+
+if df.empty:
+    st.warning("No hay eventos en el periodo seleccionado. Amplía el rango de fechas.")
+    st.stop()
+
+progress_bar2 = st.progress(0, text="Infiriendo orden de actividades…")
+with st.spinner(""):
+    act_order = infer_order(df)
+    progress_bar2.progress(40, text="Calculando tiempos por actividad…")
+
+    t_df = activity_times(df)
+    progress_bar2.progress(75, text="Calculando puntuaciones de sospecha…")
+
+    sus_df = suspicion_scores(t_df, alpha, threshold)
+    progress_bar2.progress(100, text="¡Listo!")
+progress_bar2.empty()
+
+if t_df.empty:
     st.error("No se encontraron eventos de estudiantes en el CSV. Revisa los nombres a excluir.")
     st.stop()
 
