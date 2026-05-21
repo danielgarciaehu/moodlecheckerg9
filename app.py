@@ -636,7 +636,7 @@ with tab_general:
             labels={"color": "Ratio vs media"},
         )
         fig_heat.update_layout(
-            height=max(280, n_students * 17),
+            height=max(320, n_students * 24 + 160),
             xaxis_tickangle=-40,
             margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
@@ -762,7 +762,7 @@ with tab_temporal:
             labels={"color": "Act./día"},
         )
         fig_tl1.update_layout(
-            height=max(300, len(user_ord_tl) * 18),
+            height=max(320, len(user_ord_tl) * 24 + 160),
             xaxis_tickangle=-45,
             margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
@@ -797,7 +797,7 @@ with tab_temporal:
             labels={"color": "Min./día"},
         )
         fig_tl2.update_layout(
-            height=max(300, len(user_ord_tl) * 18),
+            height=max(320, len(user_ord_tl) * 24 + 160),
             xaxis_tickangle=-45,
             margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
@@ -860,7 +860,8 @@ with tab_tiempos:
             category_orders={"act_short": short_order},
         )
         fig_box.update_layout(
-            height=480, xaxis_tickangle=-45,
+            height=max(560, len(act_order) * 22 + 200),
+            xaxis_tickangle=-45,
             margin=dict(b=160), legend_title_text="",
         )
         st.plotly_chart(fig_box, use_container_width=True)
@@ -1199,7 +1200,7 @@ with tab_individual:
             )
             max_min = gantt_df["Min"].max() if not gantt_df.empty else 60
             fig_gantt.update_layout(
-                height=max(320, len(gantt_rows) * 26 + 60),
+                height=max(380, len(gantt_rows) * 34 + 160),
                 margin=dict(l=20, b=140),
                 coloraxis_colorbar=dict(
                     orientation="h",
