@@ -995,11 +995,54 @@ Esto evita que los propios sospechosos arrastren la media de referencia hacia ab
 with tab_individual:
     st.subheader("Informe individual detallado")
 
-    # Selector ordenado por sospecha
-    student_opts = sus_df["user"].tolist()
+    # ── Buscador + ordenación ─────────────────────────────────────────────────
+    fc1, fc2 = st.columns([2, 1])
+    with fc1:
+        txt_filter = st.text_input(
+            "Buscar", placeholder="Escribe nombre o apellido…",
+            label_visibility="collapsed", key="ind_search"
+        )
+    with fc2:
+        sort_by = st.selectbox(
+            "Orden", options=[
+                "Por sospecha",
+                "Alfabético (nombre)",
+                "Alfabético (apellido)",
+                "Último acceso (más reciente)",
+                "Último acceso (más antiguo)",
+            ],
+            label_visibility="collapsed", key="ind_sort"
+        )
+
+    # Construir lista filtrada y ordenada
+    candidates = sus_df.copy()
+    if txt_filter.strip():
+        mask = candidates["user"].str.contains(txt_filter.strip(), case=False, na=False)
+        candidates = candidates[mask]
+
+    if sort_by == "Alfabético (nombre)":
+        candidates = candidates.sort_values("user")
+    elif sort_by == "Alfabético (apellido)":
+        # Ordenar por el segundo token (primer apellido)
+        candidates = candidates.assign(
+            _sort=candidates["user"].str.split().str[1:].str.join(" ")
+        ).sort_values("_sort").drop(columns="_sort")
+    elif sort_by == "Último acceso (más reciente)":
+        candidates = candidates.sort_values("last_visit", ascending=False)
+    elif sort_by == "Último acceso (más antiguo)":
+        candidates = candidates.sort_values("last_visit", ascending=True)
+    # "Por sospecha" ya viene ordenado por defecto
+
+    student_opts = candidates["user"].tolist()
+
+    if not student_opts:
+        st.warning("Ningún participante coincide con la búsqueda.")
+        st.stop()
+
     sel_user = st.selectbox(
-        "Selecciona un participante (ordenados por sospecha)",
+        "Participante",
         options=student_opts,
+        label_visibility="collapsed",
         key="sel_user_tab5",
     )
 
