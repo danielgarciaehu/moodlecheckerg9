@@ -323,19 +323,32 @@ st.markdown("""
   .alert-red    { color:#c62828; font-weight:700; }
   .alert-orange { color:#e65100; font-weight:700; }
   .alert-green  { color:#1b5e20; font-weight:700; }
-  /* Altura de pestañas reducida ~40% */
-  [data-baseweb="tab"] {
-      padding-top: 6px !important;
-      padding-bottom: 6px !important;
-      min-height: 0 !important;
-  }
+  /* Pestañas compactas */
   [data-baseweb="tab-list"] {
       min-height: 0 !important;
+      height: auto !important;
   }
-  /* Pestaña activa: fondo granate muy tenue */
+  [data-baseweb="tab"] {
+      padding: 3px 12px !important;
+      min-height: 0 !important;
+      height: auto !important;
+      line-height: 1.4 !important;
+      font-weight: normal !important;
+  }
+  button[data-baseweb="tab"] > div,
+  button[data-baseweb="tab"] p {
+      font-size: 0.82rem !important;
+      padding: 0 !important;
+      margin: 0 !important;
+  }
+  /* Pestaña activa: fondo granate tenue + negrita */
   [data-baseweb="tab"][aria-selected="true"] {
       background-color: rgba(120, 30, 30, 0.07) !important;
       border-radius: 4px 4px 0 0;
+      font-weight: 700 !important;
+  }
+  [data-baseweb="tab"][aria-selected="true"] p {
+      font-weight: 700 !important;
   }
 </style>
 <script>
