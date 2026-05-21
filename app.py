@@ -409,7 +409,7 @@ with st.sidebar:
 # ─────────────────────────────────────────────────────────────────────────────
 # Subida del fichero
 # ─────────────────────────────────────────────────────────────────────────────
-st.title("Moodle Detective — Panel de Control")
+st.title("Detector de sprinters para eGela")
 st.caption("Detección forense de comportamientos sospechosos en cursos Moodle")
 
 uploaded = st.file_uploader(
