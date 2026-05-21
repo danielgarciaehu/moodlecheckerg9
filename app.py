@@ -323,6 +323,11 @@ st.markdown("""
   .alert-red    { color:#c62828; font-weight:700; }
   .alert-orange { color:#e65100; font-weight:700; }
   .alert-green  { color:#1b5e20; font-weight:700; }
+  /* Pestaña activa: fondo granate muy tenue */
+  [data-baseweb="tab"][aria-selected="true"] {
+      background-color: rgba(120, 30, 30, 0.07) !important;
+      border-radius: 4px 4px 0 0;
+  }
 </style>
 """, unsafe_allow_html=True)
 
