@@ -337,7 +337,7 @@ with st.sidebar:
     st.subheader("Filtros de usuarios")
     teacher_input = st.text_area(
         "Excluir estos usuarios (uno por línea)",
-        "DANIEL GARCIA GONZALEZ\nAdmin Usuario\nENERITZ IBARGUENGOITIA BASTERRECHEA",
+        "DANIEL GARCIA GONZALEZ\nAdmin Usuario",
         height=110,
         help="Docentes y administradores que no son estudiantes",
     )
