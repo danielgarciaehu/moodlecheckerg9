@@ -353,15 +353,30 @@ st.markdown("""
 </style>
 <script>
 (function() {
-    if (sessionStorage.getItem('_sb_init')) return;
-    sessionStorage.setItem('_sb_init', '1');
-    function tryClose() {
-        var doc = (window.parent && window.parent.document) ? window.parent.document : document;
-        var btn = doc.querySelector('[data-testid="collapsedControl"]');
-        if (btn) { btn.click(); }
-        else     { setTimeout(tryClose, 150); }
+    var doc = (window.parent && window.parent.document) ? window.parent.document : document;
+
+    // Cerrar sidebar solo la primera vez en esta sesión
+    if (!sessionStorage.getItem('_sb_init')) {
+        sessionStorage.setItem('_sb_init', '1');
+        function tryClose() {
+            var btn = doc.querySelector('[data-testid="collapsedControl"]');
+            if (btn) { btn.click(); } else { setTimeout(tryClose, 150); }
+        }
+        setTimeout(tryClose, 250);
     }
-    setTimeout(tryClose, 250);
+
+    // Activar pestaña RANKING SOSPECHOSOS solo la primera vez
+    if (!sessionStorage.getItem('_tab_init')) {
+        sessionStorage.setItem('_tab_init', '1');
+        function clickRanking() {
+            var tabs = doc.querySelectorAll('[data-baseweb="tab"]');
+            for (var t of tabs) {
+                if (t.textContent.trim() === 'RANKING SOSPECHOSOS') { t.click(); return; }
+            }
+            setTimeout(clickRanking, 150);
+        }
+        setTimeout(clickRanking, 500);
+    }
 })();
 </script>
 """, unsafe_allow_html=True)
@@ -422,7 +437,7 @@ with st.sidebar:
 # ─────────────────────────────────────────────────────────────────────────────
 # Subida del fichero
 # ─────────────────────────────────────────────────────────────────────────────
-st.title("Detector de sprinters para eGela")
+st.title("Detector de alumnos sprinters para eGela")
 st.caption("Detección forense de comportamientos sospechosos en cursos Moodle")
 
 uploaded = st.file_uploader(
@@ -443,8 +458,7 @@ elif _ejemplo.exists():
     raw_bytes = _ejemplo.read_bytes()
     using_example = True
     st.info(
-        "Mostrando datos del fichero de ejemplo incluido con la aplicación. "
-        "Sube tu propio log para analizarlo."
+        "Mostrando datos de ejemplo. Sube tu propio fichero 'log' en CSV para analizarlo."
     )
 else:
     st.info(
@@ -891,7 +905,8 @@ Esto evita que los propios sospechosos arrastren la media de referencia hacia ab
             x="total_min", y="max_apd",
             color="score",
             size="n_activities",
-            hover_data=["user", "score", "fast_n", "duration_days", "time_ratio"],
+            hover_name="user",
+            hover_data=["score", "fast_n", "duration_days", "time_ratio"],
             color_continuous_scale=[[0, "#4caf50"], [0.4, "#ffeb3b"], [1, "#d32f2f"]],
             range_color=[0, 100],
             labels={
