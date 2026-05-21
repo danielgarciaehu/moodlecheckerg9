@@ -108,7 +108,7 @@ def parse_csv(raw: bytes) -> pd.DataFrame:
         st.error("No se pudo leer el CSV. Comprueba la codificación del fichero.")
         st.stop()
 
-    df.columns = [c.strip() for c in df.columns]
+    df.columns = [c.strip().lstrip('﻿') for c in df.columns]
     rename = {
         "Hora":                          "ts_raw",
         "Nombre completo del usuario":   "user",
