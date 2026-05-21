@@ -513,11 +513,11 @@ if course_name:
 # ─────────────────────────────────────────────────────────────────────────────
 # PESTAÑAS PRINCIPALES
 # ─────────────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab_ranking, tab_general, tab_temporal, tab_tiempos, tab_individual = st.tabs([
+    "RANKING SOSPECHOSOS",
     "PANEL GENERAL",
     "LINEA TEMPORAL",
     "TIEMPOS POR ACTIVIDAD",
-    "RANKING SOSPECHOSOS",
     "INFORME INDIVIDUAL",
 ])
 
@@ -525,7 +525,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 1 – Panel General
 # ═══════════════════════════════════════════════════════════════════════════════
-with tab1:
+with tab_general:
     c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Participantes",         n_students)
     c2.metric("Actividades",           n_acts)
@@ -635,7 +635,7 @@ with tab1:
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 2 – Línea Temporal
 # ═══════════════════════════════════════════════════════════════════════════════
-with tab2:
+with tab_temporal:
     st.subheader("Linea temporal del curso")
 
     # Controles de la vista temporal
@@ -763,7 +763,7 @@ with tab2:
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 3 – Tiempos por Actividad
 # ═══════════════════════════════════════════════════════════════════════════════
-with tab3:
+with tab_tiempos:
     st.subheader("Distribución de tiempos por actividad")
 
     # Enriquecer t_df con estadísticas
@@ -878,7 +878,7 @@ with tab3:
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 4 – Ranking Sospechosos
 # ═══════════════════════════════════════════════════════════════════════════════
-with tab4:
+with tab_ranking:
     st.subheader("Ranking de participantes sospechosos")
 
     with st.expander("Metodología de la puntuación", expanded=False):
@@ -992,7 +992,7 @@ Esto evita que los propios sospechosos arrastren la media de referencia hacia ab
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 5 – Informe Individual
 # ═══════════════════════════════════════════════════════════════════════════════
-with tab5:
+with tab_individual:
     st.subheader("Informe individual detallado")
 
     # Selector ordenado por sospecha
