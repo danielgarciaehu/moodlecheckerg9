@@ -323,12 +323,34 @@ st.markdown("""
   .alert-red    { color:#c62828; font-weight:700; }
   .alert-orange { color:#e65100; font-weight:700; }
   .alert-green  { color:#1b5e20; font-weight:700; }
+  /* Altura de pestañas reducida ~40% */
+  [data-baseweb="tab"] {
+      padding-top: 6px !important;
+      padding-bottom: 6px !important;
+      min-height: 0 !important;
+  }
+  [data-baseweb="tab-list"] {
+      min-height: 0 !important;
+  }
   /* Pestaña activa: fondo granate muy tenue */
   [data-baseweb="tab"][aria-selected="true"] {
       background-color: rgba(120, 30, 30, 0.07) !important;
       border-radius: 4px 4px 0 0;
   }
 </style>
+<script>
+(function() {
+    if (sessionStorage.getItem('_sb_init')) return;
+    sessionStorage.setItem('_sb_init', '1');
+    function tryClose() {
+        var doc = (window.parent && window.parent.document) ? window.parent.document : document;
+        var btn = doc.querySelector('[data-testid="collapsedControl"]');
+        if (btn) { btn.click(); }
+        else     { setTimeout(tryClose, 150); }
+    }
+    setTimeout(tryClose, 250);
+})();
+</script>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
