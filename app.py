@@ -441,7 +441,7 @@ st.title("Detector de alumnos sprinters para eGela")
 st.caption("Detección forense de comportamientos sospechosos en cursos Moodle")
 
 uploaded = st.file_uploader(
-    "Sube el log de tu propio Moodle (CSV, hasta 200 MB)",
+    "Mostrando datos de ejemplo. Sube el 'log' de tu propio Moodle en CSV para analizarlo",
     type=["csv"],
     help="Moodle → Administración del curso → Informes → Registros → Descargar en formato CSV",
 )
@@ -457,9 +457,6 @@ if uploaded is not None:
 elif _ejemplo.exists():
     raw_bytes = _ejemplo.read_bytes()
     using_example = True
-    st.info(
-        "Mostrando datos de ejemplo. Sube tu propio fichero 'log' en CSV para analizarlo."
-    )
 else:
     st.info(
         "Sube un fichero CSV de logs de Moodle para iniciar el análisis.\n\n"
