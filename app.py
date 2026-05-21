@@ -638,11 +638,11 @@ with tab_general:
         fig_heat.update_layout(
             height=max(280, n_students * 17),
             xaxis_tickangle=-40,
-            margin=dict(l=160, r=20, t=10, b=80),
+            margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
                 orientation="h",
                 x=0.5, xanchor="center",
-                y=-0.12, yanchor="top",
+                y=-0.22, yanchor="top",
                 thickness=14, len=0.7,
                 title=dict(text="Ratio respecto a la media del grupo", side="top"),
                 tickvals=[0, 0.4, 1, 2, 3],
@@ -764,11 +764,11 @@ with tab_temporal:
         fig_tl1.update_layout(
             height=max(300, len(user_ord_tl) * 18),
             xaxis_tickangle=-45,
-            margin=dict(l=160, r=20, t=10, b=80),
+            margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
                 orientation="h",
                 x=0.5, xanchor="center",
-                y=-0.12, yanchor="top",
+                y=-0.22, yanchor="top",
                 thickness=14, len=0.7,
                 title=dict(text="Actividades por día (rojo = sprint)", side="top"),
                 tickvals=[0, round(rush_threshold * 0.4), round(rush_threshold * 0.7), rush_threshold],
@@ -799,11 +799,11 @@ with tab_temporal:
         fig_tl2.update_layout(
             height=max(300, len(user_ord_tl) * 18),
             xaxis_tickangle=-45,
-            margin=dict(l=160, r=20, t=10, b=80),
+            margin=dict(l=160, r=20, t=10, b=150),
             coloraxis_colorbar=dict(
                 orientation="h",
                 x=0.5, xanchor="center",
-                y=-0.12, yanchor="top",
+                y=-0.22, yanchor="top",
                 thickness=14, len=0.7,
                 title=dict(text="Minutos por día (blanco = inactividad, verde = normal, rojo = muy poco)", side="top"),
                 tickvals=[0, round(avg_day), round(avg_day * 2), round(avg_day * 3)],
@@ -1200,11 +1200,11 @@ with tab_individual:
             max_min = gantt_df["Min"].max() if not gantt_df.empty else 60
             fig_gantt.update_layout(
                 height=max(320, len(gantt_rows) * 26 + 60),
-                margin=dict(l=20, b=70),
+                margin=dict(l=20, b=140),
                 coloraxis_colorbar=dict(
                     orientation="h",
                     x=0.5, xanchor="center",
-                    y=-0.18, yanchor="top",
+                    y=-0.38, yanchor="top",
                     thickness=14, len=0.6,
                     title=dict(text="Minutos invertidos (rojo = poco, verde = suficiente)", side="top"),
                     tickvals=[0, round(max_min * 0.3), round(max_min * 0.7), round(max_min)],
