@@ -460,11 +460,11 @@ if course_name:
 # PESTAÑAS PRINCIPALES
 # ─────────────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "Panel General",
-    "Linea Temporal",
-    "Tiempos por Actividad",
-    "Ranking Sospechosos",
-    "Informe Individual",
+    "PANEL GENERAL",
+    "LINEA TEMPORAL",
+    "TIEMPOS POR ACTIVIDAD",
+    "RANKING SOSPECHOSOS",
+    "INFORME INDIVIDUAL",
 ])
 
 
