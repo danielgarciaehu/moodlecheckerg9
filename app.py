@@ -514,7 +514,7 @@ with col_periodo:
             key="rango_custom",
         )
         if isinstance(_rango, (list, tuple)) and len(_rango) == 2:
-            _f_from, _f_to = pd.Timestamp(_rango[0]), pd.Timestamp(_rango[1]) + timedelta(days=1) - timedelta(seconds=1)
+            _f_from, _f_to = _rango[0], _rango[1]
         else:
             _f_from, _f_to = _dmin_full, _dmax_full
     else:
